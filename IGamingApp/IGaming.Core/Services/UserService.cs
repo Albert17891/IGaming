@@ -13,23 +13,33 @@ public class UserService : IUserService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtService _jwtService;
-    private const int Iterations = 10000;
-    private const int SaltSize = 16;
-    private const int HashSize = 20;
 
     public UserService(IUnitOfWork unitOfWork, IJwtService jwtService)
     {
         _unitOfWork = unitOfWork;
         _jwtService = jwtService;
     }
-    public async Task<string> Login(string username, string password)
+
+    public async Task<UserServiceModel> GetUserInfo(string token)
+    {
+        var userClaims = _jwtService.GetClaimsPrincipalFromToken(token);
+
+        var userName = userClaims?.FindFirst("name")?.Value;
+
+        var user = await _unitOfWork.Repository<User>().Table
+                                              .SingleOrDefaultAsync(x => x.UserName == userName) ?? throw new UserNotFoundException("User Not Found");
+
+        return user.Adapt<UserServiceModel>();
+    }
+
+    public async Task<string> Login(string userName, string password)
     {
         var user = await _unitOfWork.Repository<User>().Table
-                                              .SingleOrDefaultAsync(x => x.UserName == username);
+                                              .SingleOrDefaultAsync(x => x.UserName == userName);
 
         if (user != null && VerifyPassword(password, user.Password))
         {
-            return _jwtService.GetJwtToken(username);
+            return _jwtService.GetJwtToken(userName);
         }
 
         throw new UserNotFoundException("User Not Found");
