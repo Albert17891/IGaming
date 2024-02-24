@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGaming", "IGaming\IGaming.csproj", "{D3E8C376-93B9-405B-B234-1A880B817F21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGaming.Infastructure", "IGaming.Infastructure\IGaming.Infastructure.csproj", "{5687D794-7465-4DA6-8468-AA3D8133B9BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGaming.Infrastructure", "IGaming.Infastructure\IGaming.Infrastructure.csproj", "{5687D794-7465-4DA6-8468-AA3D8133B9BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGaming.Core", "IGaming.Core\IGaming.Core.csproj", "{D6E0AEAC-E5B5-4953-A6D1-47A8B8F82D13}"
 EndProject
