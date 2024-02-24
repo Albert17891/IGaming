@@ -2,7 +2,6 @@ using Asp.Versioning;
 using IGaming.Core;
 using IGaming.Infrastructure;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 namespace IGaming;
 
@@ -19,8 +18,8 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(swagger =>
-        {          
-           
+        {
+
 
             swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
             {
@@ -33,9 +32,9 @@ public class Program
             });
 
             swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-              new OpenApiSecurityScheme
+            {
+              {
+                new OpenApiSecurityScheme
                 {
                     Reference = new OpenApiReference
                     {
@@ -44,11 +43,9 @@ public class Program
                     }
                 },
                 new string[] {}
-        }
-    });
+               }
+            });
         });
-
-
 
         builder.Services.AddInfrastructureServices(configuration);
         builder.Services.AddCoreServices(configuration);
@@ -79,7 +76,9 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
-        app.UseAuthorization();       
+        app.UseAuthorization();
+
+        app.UseMiddleware<GlobalExceptionHandler>();
 
         app.MapControllers();
 
