@@ -2,6 +2,7 @@
 using IGaming.Core.Interfaces;
 using IGaming.Core.Models;
 using IGaming.Models.Request;
+using IGaming.Models.Response;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,14 +26,14 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     [Route("authenticate")]
     [HttpPost]
-    public async Task<IActionResult> Authenticate(string userName, string password)
+    public async Task<IActionResult> Authenticate(LoginRequest login)
     {
-        if (userName == null || password == null)
+        if (login.UserName == null || login.Password == null)
         {
             return BadRequest("UserName or Password is Null");
         }
 
-        var token = await _userService.Login(userName, password);
+        var token = await _userService.Login(login.UserName, login.Password);
 
         return Ok(token);
     }
@@ -60,13 +61,13 @@ public class UserController : ControllerBase
     {
         var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-        if (token != null)
+        if (token == null)
         {
             return BadRequest();
         }
 
         var user = await _userService.GetUserInfo(token);
 
-        return Ok(user);
+        return Ok(user.Adapt<UserResponse>());
     }
 }
