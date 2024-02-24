@@ -13,8 +13,8 @@ public class BetConfiguration : IEntityTypeConfiguration<Bet>
         builder.Property(x => x.Details).IsRequired();
 
         builder.Property(x => x.Amount)
-            .IsRequired()
-            .HasDefaultValue(1000);
+            .IsRequired();
+            
 
         builder.HasOne(b => b.User)
                .WithMany(u => u.Bets)
