@@ -28,7 +28,7 @@ public class JwtService : IJwtService
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, userName),
+                new Claim(JwtRegisteredClaimNames.Name, userName),
             }),
 
             Expires = DateTime.Now.AddMinutes(expiresMinutes),
@@ -42,5 +42,33 @@ public class JwtService : IJwtService
         var accessToken = tokenHandler.WriteToken(token);
 
         return accessToken;
+    }
+
+    public ClaimsPrincipal GetClaimsPrincipalFromToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = GetTokenValidationParameters();
+
+        try
+        {
+            ClaimsPrincipal principal = tokenHandler.ValidateToken(token, validationParameters, out _);
+            return principal;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    private TokenValidationParameters GetTokenValidationParameters()
+    {
+        return new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero
+        };
     }
 }
