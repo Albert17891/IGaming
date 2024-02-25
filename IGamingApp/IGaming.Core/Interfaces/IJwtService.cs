@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-
 namespace IGaming.Core.Interfaces;
 
 public interface IJwtService

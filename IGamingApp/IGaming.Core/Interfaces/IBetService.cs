@@ -1,5 +1,4 @@
 ﻿using IGaming.Core.Models;
-
 namespace IGaming.Core.Interfaces;
 
 public interface IBetService

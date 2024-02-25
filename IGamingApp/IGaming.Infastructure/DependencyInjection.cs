@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace IGaming.Infrastructure;
+
 public static class DependencyInjection
 {
     private static AccessTokenConfiguration _options;

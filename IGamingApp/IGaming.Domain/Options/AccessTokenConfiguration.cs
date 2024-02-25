@@ -1,4 +1,5 @@
 ﻿namespace IGaming.Domain.Options;
+
 public class AccessTokenConfiguration
 {
     public string Issuer { get; set; }

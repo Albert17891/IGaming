@@ -14,7 +14,6 @@ public class BetConfiguration : IEntityTypeConfiguration<Bet>
 
         builder.Property(x => x.Amount)
             .IsRequired();
-            
 
         builder.HasOne(b => b.User)
                .WithMany(u => u.Bets)

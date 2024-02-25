@@ -19,8 +19,6 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(swagger =>
         {
-
-
             swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
             {
                 Name = "Authorization",
@@ -42,7 +40,7 @@ public class Program
                         Id = "Bearer"
                     }
                 },
-                new string[] {}
+                Array.Empty<string>()
                }
             });
         });

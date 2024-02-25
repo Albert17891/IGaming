@@ -6,6 +6,6 @@ public class BetRequest
 {
     [Required]
     public decimal Amount { get; set; }
-    [Required]    
+    [Required]
     public string Details { get; set; }
 }

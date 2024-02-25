@@ -1,4 +1,5 @@
 ﻿namespace IGaming.Domain.Models;
+
 public class Bet
 {
     public int Id { get; set; }

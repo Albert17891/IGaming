@@ -1,12 +1,8 @@
 ﻿using IGaming.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IGaming.Infrastructure;
+
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly AppDbContext _context;

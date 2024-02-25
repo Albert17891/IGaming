@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IGaming.Controllers.v1;
 
-
 [ApiVersion(1)]
 [Authorize]
 [Route("api/v{v:apiVersion}/bets")]
