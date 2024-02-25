@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace IGaming.Core.Services;
+
 public class UserService : IUserService
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -37,7 +38,7 @@ public class UserService : IUserService
         var user = await _unitOfWork.Repository<User>().Table
                                               .SingleOrDefaultAsync(x => x.UserName == userName);
 
-        if (user != null && VerifyPassword(password, user.Password))
+        if (user != null && VerifyPassword(password, user.Password, user.PasswordSalt))
         {
             return _jwtService.GetJwtToken(userName);
         }
@@ -52,7 +53,6 @@ public class UserService : IUserService
             throw new ArgumentException("ConfirmPassword must be equal to Password");
         }
 
-
         var isExist = await _unitOfWork.Repository<User>().Table.AnyAsync(x => x.UserName == userServiceModel.UserName, cancellationToken);
 
         if (isExist)
@@ -60,30 +60,38 @@ public class UserService : IUserService
             throw new SameUserNameExceptions($"The username  {userServiceModel.UserName} exist,Use Another Name");
         }
 
-
-
         var user = userServiceModel.Adapt<User>();
 
-        user.Password = HashPassword(userServiceModel.Password);
+        user.Password = HashPassword(userServiceModel.Password, out byte[] salt);
+        user.PasswordSalt = salt;
 
         await _unitOfWork.Repository<User>().AddAsync(user, cancellationToken);
 
         await _unitOfWork.SaveChangeAsync();
     }
 
-    private string HashPassword(string password)
+    const int keySize = 64;
+    const int iterations = 350000;
+    readonly HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+
+    private string HashPassword(string password, out byte[] salt)
     {
-        using SHA256 sha256 = SHA256.Create();
+        salt = RandomNumberGenerator.GetBytes(keySize);
 
-        byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+        var hash = Rfc2898DeriveBytes.Pbkdf2(
+            Encoding.UTF8.GetBytes(password),
+            salt,
+            iterations,
+            hashAlgorithm,
+            keySize);
 
-        return Convert.ToBase64String(hashedBytes);
+        return Convert.ToHexString(hash);
     }
 
-    private bool VerifyPassword(string enteredPassword, string storedHashedPassword)
+    private bool VerifyPassword(string password, string hash, byte[] salt)
     {
-        string enteredHash = HashPassword(enteredPassword);
+        var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, hashAlgorithm, keySize);
 
-        return storedHashedPassword.Equals(enteredHash);
+        return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromHexString(hash));
     }
 }
