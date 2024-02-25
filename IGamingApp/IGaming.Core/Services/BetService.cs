@@ -22,7 +22,7 @@ public class BetService : IBetService
 
         var bet = betModel.Adapt<Bet>();
 
-        var user = await _userService.GetUserInfo(token);
+        var user = await _userService.GetUserInfo(token, cancellationToken);
 
         bet.Amount += initialBetAmount;
 

@@ -26,14 +26,14 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     [Route("authenticate")]
     [HttpPost]
-    public async Task<IActionResult> Authenticate(LoginRequest login)
+    public async Task<IActionResult> Authenticate(LoginRequest login, CancellationToken cancellationToken = default)
     {
         if (login.UserName == null || login.Password == null)
         {
             return BadRequest("UserName or Password is Null");
         }
 
-        var token = await _userService.Login(login.UserName, login.Password);
+        var token = await _userService.Login(login.UserName, login.Password, cancellationToken);
 
         return Ok(token);
     }
@@ -57,7 +57,7 @@ public class UserController : ControllerBase
     [MapToApiVersion(1)]
     [Route("profile")]
     [HttpPost]
-    public async Task<IActionResult> GetProfileInfo()
+    public async Task<IActionResult> GetProfileInfo(CancellationToken cancellationToken = default)
     {
         var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
@@ -66,7 +66,7 @@ public class UserController : ControllerBase
             return BadRequest();
         }
 
-        var user = await _userService.GetUserInfo(token);
+        var user = await _userService.GetUserInfo(token, cancellationToken);
 
         return Ok(user.Adapt<UserResponse>());
     }

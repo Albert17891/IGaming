@@ -21,22 +21,22 @@ public class UserService : IUserService
         _jwtService = jwtService;
     }
 
-    public async Task<UserServiceModel> GetUserInfo(string token)
+    public async Task<UserServiceModel> GetUserInfo(string token, CancellationToken cancellationToken)
     {
         var userClaims = _jwtService.GetClaimsPrincipalFromToken(token);
 
         var userName = userClaims?.FindFirst("name")?.Value;
 
         var user = await _unitOfWork.Repository<User>().Table
-                                              .SingleOrDefaultAsync(x => x.UserName == userName) ?? throw new UserNotFoundException("User Not Found");
+                                              .SingleOrDefaultAsync(x => x.UserName == userName, cancellationToken) ?? throw new UserNotFoundException("User Not Found");
 
         return user.Adapt<UserServiceModel>();
     }
 
-    public async Task<string> Login(string userName, string password)
+    public async Task<string> Login(string userName, string password, CancellationToken cancellationToken)
     {
         var user = await _unitOfWork.Repository<User>().Table
-                                              .SingleOrDefaultAsync(x => x.UserName == userName);
+                                              .SingleOrDefaultAsync(x => x.UserName == userName, cancellationToken);
 
         if (user != null && VerifyPassword(password, user.Password, user.PasswordSalt))
         {
