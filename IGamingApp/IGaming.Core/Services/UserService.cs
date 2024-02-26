@@ -70,6 +70,7 @@ public class UserService : IUserService
         await _unitOfWork.SaveChangeAsync();
     }
 
+    //Can be Set in Configuration
     const int keySize = 64;
     const int iterations = 350000;
     readonly HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
