@@ -21,7 +21,13 @@ public class BetController : ControllerBase
         _betService = betService;
     }
 
-    [MapToApiVersion(1)]    
+    /// <summary>
+    /// Place Pet
+    /// </summary>
+    /// <param name="betRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [MapToApiVersion(1)]
     [Route("profile")]
     [HttpPost]
     public async Task<IActionResult> PlaceBet(BetRequest betRequest, CancellationToken cancellationToken = default)
@@ -35,7 +41,7 @@ public class BetController : ControllerBase
 
         var betServiceModel = betRequest.Adapt<BetServiceModel>();
 
-        await _betService.CreateBet(betServiceModel,token, cancellationToken);
+        await _betService.CreateBet(betServiceModel, token, cancellationToken);
 
         return Ok();
     }

@@ -22,6 +22,12 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
+    /// <summary>
+    /// Login
+    /// </summary>
+    /// <param name="login"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [MapToApiVersion(1)]
     [AllowAnonymous]
     [Route("authenticate")]
@@ -38,9 +44,15 @@ public class UserController : ControllerBase
         return Ok(token);
     }
 
+    /// <summary>
+    /// Register User
+    /// </summary>
+    /// <param name="registerRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [MapToApiVersion(1)]
     [AllowAnonymous]
-    [Route("Register")]
+    [Route("register")]
     [HttpPost]
     public async Task<IActionResult> Register(RegisterRequest registerRequest, CancellationToken cancellationToken = default)
     {
@@ -54,6 +66,11 @@ public class UserController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Get User Info use Token
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [MapToApiVersion(1)]
     [Route("profile")]
     [HttpPost]
